@@ -128,6 +128,21 @@ func main() {
 		println(k)
 	}
 
-	panic("something bad just happened")
+	r := HTTPRequest{Method: "GET"}
 
+	switch r.Method {
+		case "GET":
+				println("Get request")
+				fallthrough
+		case "DELETE":
+				println("Delete request")
+		case "POST":
+				println("Post request")
+		case "PUT":
+				println("Put request")
+		default:
+				println("Rare request")
+	}
+
+	panic("something bad just happened")
 }
