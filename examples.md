@@ -123,4 +123,11 @@ func main() {
 	}
 	fmt.Println(u2)
 
+	wellknownPorts := map[string]int{"http": 80, "https": 443}
+	for k := range wellKnownPorts {
+		println(k)
+	}
+
+	panic("something bad just happened")
+
 }
