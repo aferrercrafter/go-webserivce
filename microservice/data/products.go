@@ -14,6 +14,11 @@ type Product struct {
 	DeletedOn   string
 }
 
+// GetProducts gGet list of products
+func GetProducts() []*Product {
+	return productsLists
+}
+
 var productsLists = []*Product{
 	&Product{
 		ID:          1,
