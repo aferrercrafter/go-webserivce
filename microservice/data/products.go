@@ -27,12 +27,29 @@ func (p *Products) ToJSON(w io.Writer) error {
 	return e.Encode(p)
 }
 
-// GetProducts gGet list of products
-func GetProducts() Products {
-	return productsLists
+// FromJSON decode and write the products
+func (p *Product) FromJSON(r io.Reader) error {
+	e := json.NewDecoder(r)
+	return e.Decode(p)
 }
 
-var productsLists = []*Product{
+// GetProducts get list of products
+func GetProducts() Products {
+	return productsList
+}
+
+// AddProduct add product to the data store
+func AddProduct(p *Product) {
+	p.ID = getNextID()
+	productsList = append(productsList, p)
+}
+
+func getNextID() int {
+	lp := productsList[len(productsList)-1]
+	return lp.ID + 1
+}
+
+var productsList = []*Product{
 	&Product{
 		ID:          1,
 		Name:        "Latte",
