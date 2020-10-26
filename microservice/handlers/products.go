@@ -3,6 +3,8 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 
 	"github.com/aferrercrafter/microservice-go/data"
 )
@@ -29,6 +31,34 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		p.addProduct(rw, r)
 		return
+	}
+
+	if r.Method == http.MethodPut {
+		// expect the id in the URL
+		re := regexp.MustCompile(`/([0-9]+)`)
+		g := re.FindAllStringSubmatch(r.URL.Path, -1)
+
+		if len(g) != 1 {
+			p.l.Println("Invalid URI more than one id")
+			http.Error(rw, "Invalid URI", http.StatusBadRequest)
+			return
+		}
+
+		if len(g[0]) != 2 {
+			p.l.Println("Invalid URI more than one capture grup")
+			http.Error(rw, "Invalid URI", http.StatusBadRequest)
+			return
+		}
+
+		idString := g[0][1]
+		id, err := strconv.Atoi(idString)
+		if err != nil {
+			p.l.Println("Invalid URI unable to convert to number ", idString)
+			http.Error(rw, "Invalid URI", http.StatusBadRequest)
+			return
+		}
+
+		p.l.Println("got id", id)
 	}
 
 	// catch all
