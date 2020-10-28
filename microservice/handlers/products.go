@@ -3,8 +3,10 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/aferrercrafter/microservice-go/data"
+	"github.com/gorilla/mux"
 )
 
 // Products Handler
@@ -45,12 +47,19 @@ func (p *Products) addProduct(rw http.ResponseWriter, r *http.Request) {
 	data.AddProduct(prod)
 }
 
-// updateProduct returns the products from the data store
-func (p *Products) updateProduct(id int, rw http.ResponseWriter, r *http.Request) {
+// UpdateProduct returns the products from the data store
+func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
+		return
+	}
+
 	p.l.Println("Handle PUT Products")
 
 	prod := &data.Product{}
-	err := prod.FromJSON(r.Body)
+	err = prod.FromJSON(r.Body)
 	if err != nil {
 		http.Error(rw, "Unable to marshal json", http.StatusBadRequest)
 		return

@@ -22,8 +22,11 @@ func main() {
 
 	// create a new serve mux and register the handlers
 	sm := mux.NewRouter()
-	getRouter := sm.Methods("GET").Subrouter()
+	getRouter := sm.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/", ph.GetProducts)
+
+	putRouter := sm.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProduct)
 
 	// create a new server
 	s := &http.Server{
