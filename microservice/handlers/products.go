@@ -38,16 +38,6 @@ func NewProducts(l *log.Logger, v *data.Validation) *Products {
 	return &Products{l, v}
 }
 
-// AddProduct returns the products from the data store
-func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("Handle POST Products")
-
-	prod := r.Context().Value(KeyProduct{}).(data.Product)
-
-	p.l.Printf("Prod %#v", prod)
-	data.AddProduct(&prod)
-}
-
 // ErrInvalidProductPath is an error message when the product path is not valid
 var ErrInvalidProductPath = fmt.Errorf("Invalid Path, path should be /products/[id]")
 
