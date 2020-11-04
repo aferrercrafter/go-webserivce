@@ -10,28 +10,36 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/aferrercrafter/microservice-go/data"
 	"github.com/aferrercrafter/microservice-go/handlers"
 )
 
 func main() {
 
 	l := log.New(os.Stdout, "products-api", log.LstdFlags)
+	v := data.NewValidation()
 
 	// create the handlers
-	ph := handlers.NewProducts(l)
+	ph := handlers.NewProducts(l, v)
 
 	// create a new serve mux and register the handlers
 	sm := mux.NewRouter()
-	getRouter := sm.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/", ph.GetProducts)
 
-	putRouter := sm.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProduct)
-	putRouter.Use(ph.MiddlewareProductValidation)
+	// handlers for API
+	getR := sm.Methods(http.MethodGet).Subrouter()
+	getR.HandleFunc("/products", ph.ListAll)
+	getR.HandleFunc("/products/{id:[0-9]+}", ph.ListSingle)
 
-	postRouter := sm.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/", ph.AddProduct)
-	postRouter.Use(ph.MiddlewareProductValidation)
+	putR := sm.Methods(http.MethodPut).Subrouter()
+	putR.HandleFunc("/products", ph.Update)
+	putR.Use(ph.MiddlewareValidateProduct)
+
+	postR := sm.Methods(http.MethodPost).Subrouter()
+	postR.HandleFunc("/products", ph.Create)
+	postR.Use(ph.MiddlewareValidateProduct)
+
+	deleteR := sm.Methods(http.MethodDelete).Subrouter()
+	deleteR.HandleFunc("/products/{id:[0-9]+}", ph.Delete)
 
 	// create a new server
 	s := &http.Server{
