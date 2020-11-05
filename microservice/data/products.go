@@ -1,9 +1,7 @@
 package data
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"regexp"
 	"time"
 
@@ -25,12 +23,6 @@ type Product struct {
 // Products defines the structure for a Product slice
 type Products []*Product
 
-// ToJSON encode and write the products
-func (p *Products) ToJSON(w io.Writer) error {
-	e := json.NewEncoder(w)
-	return e.Encode(p)
-}
-
 // Validate add validation logic to Product json schema
 func (p *Product) Validate() error {
 	validate := validator.New()
@@ -47,12 +39,6 @@ func validateSKU(fl validator.FieldLevel) bool {
 	}
 
 	return true
-}
-
-// FromJSON decode and write the products
-func (p *Product) FromJSON(r io.Reader) error {
-	e := json.NewDecoder(r)
-	return e.Decode(p)
 }
 
 // GetProducts get list of products
