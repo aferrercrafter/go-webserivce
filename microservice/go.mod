@@ -21,6 +21,8 @@ require (
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/spf13/afero v1.4.1 // indirect
 	github.com/spf13/viper v1.7.1 // indirect
+	github.com/stretchr/objx v0.3.0 // indirect
+	github.com/stretchr/testify v1.6.1
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
 	golang.org/x/net v0.0.0-20201031054903-ff519b6c9102 // indirect
 	golang.org/x/sys v0.0.0-20201029080932-201ba4db2418 // indirect
