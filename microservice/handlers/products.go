@@ -33,9 +33,6 @@ type Products struct {
 	v *data.Validation
 }
 
-// ErrInvalidProductPath is an error message when the product path is not valid
-var ErrInvalidProductPath = fmt.Errorf("Invalid Path, path should be /products/[id]")
-
 // NewProducts returns a new products handler with the given logger
 func NewProducts(l *log.Logger, v *data.Validation) *Products {
 	return &Products{l, v}
@@ -49,31 +46,6 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 
 	p.l.Printf("Prod %#v", prod)
 	data.AddProduct(&prod)
-}
-
-// UpdateProduct returns the products from the data store
-func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		http.Error(rw, "Unable to convert id", http.StatusBadRequest)
-		return
-	}
-
-	p.l.Println("Handle PUT Products")
-
-	prod := r.Context().Value(KeyProduct{}).(data.Product)
-
-	p.l.Printf("Prod %#v", prod)
-	err = data.UpdateProduct(id, &prod)
-	if err == data.ErrProductNotFound {
-		http.Error(rw, "Product not found", http.StatusNotFound)
-		return
-	}
-	if err != nil {
-		http.Error(rw, "Product not found", http.StatusInternalServerError)
-		return
-	}
 }
 
 // ErrInvalidProductPath is an error message when the product path is not valid
